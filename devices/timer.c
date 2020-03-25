@@ -118,6 +118,8 @@ void timer_sleep(int64_t ticks)
 
 	curr_thread = thread_current();
 
+	thread_block();
+
 	curr_sleeping_thread->sleeping_thread = curr_thread;
 	curr_sleeping_thread->ticks = ticks;
 
@@ -155,6 +157,19 @@ void timer_print_stats(void)
 static void
 timer_interrupt(struct intr_frame *args UNUSED)
 {
+	struct list_elem *e;
+	struct sleeping_thread *temp;
+
+	for (e = list_begin(&sleeping_threads_list); e != list_end(&sleeping_threads_list);
+			 e = list_next(e))
+	{
+		temp = list_entry(e, struct sleeping_thread, elem);
+		if (--(temp->ticks) <= 0)
+		{
+			thread_unblock(temp->sleeping_thread);
+		}
+	}
+
 	ticks++;
 	thread_tick();
 }
