@@ -125,7 +125,7 @@ void timer_sleep(int64_t ticks)
 	curr_sleeping_thread->sleeping_thread = curr_thread;
 	curr_sleeping_thread->ticks = ticks;
 
-	list_push_back(&sleeping_threads_list, curr_thread);
+	list_push_front(&sleeping_threads_list, curr_thread);
 
 	// while (timer_elapsed (start) < ticks)
 	// thread_yield ();
