@@ -166,7 +166,8 @@ timer_interrupt(struct intr_frame *args UNUSED)
 			 e = list_next(e))
 	{
 		temp = list_entry(e, struct sleeping_thread, elem);
-		if (--(temp->ticks) <= 0)
+		temp->ticks = temp->ticks - 1;
+		if (temp->ticks <= 0)
 		{
 			thread_unblock(temp->sleeping_thread);
 			intr_set_level(INTR_ON);
