@@ -167,6 +167,7 @@ timer_interrupt(struct intr_frame *args UNUSED)
 	{
 		temp = list_entry(e, struct sleeping_thread, elem);
 		temp->ticks = temp->ticks - 1;
+		printf(temp->ticks);
 		if (temp->ticks <= 0)
 		{
 			thread_unblock(temp->sleeping_thread);
