@@ -118,6 +118,8 @@ void timer_sleep(int64_t ticks)
 
 	curr_thread = thread_current();
 
+	intr_set_level(INTR_OFF);
+
 	thread_block();
 
 	curr_sleeping_thread->sleeping_thread = curr_thread;
@@ -167,6 +169,7 @@ timer_interrupt(struct intr_frame *args UNUSED)
 		if (--(temp->ticks) <= 0)
 		{
 			thread_unblock(temp->sleeping_thread);
+			intr_set_level(INTR_ON);
 		}
 	}
 
