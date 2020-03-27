@@ -122,6 +122,8 @@ void timer_sleep(int64_t ticks)
 
 	thread_block();
 
+	printf("done");
+
 	curr_sleeping_thread->sleeping_thread = curr_thread;
 	curr_sleeping_thread->ticks = ticks;
 
