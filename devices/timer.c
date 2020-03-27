@@ -104,30 +104,32 @@ timer_elapsed(int64_t then)
 /* Suspends execution for approximately TICKS timer ticks. */
 void timer_sleep(int64_t ticks)
 {
-	// printf("time to sleep~\n");
-	int64_t start = timer_ticks();
+	if (ticks > 0)
+	{ // printf("time to sleep~\n");
+		int64_t start = timer_ticks();
 
-	// ASSERT(intr_get_level() == INTR_ON);
+		// ASSERT(intr_get_level() == INTR_ON);
 
-	struct thread *curr_thread;
-	struct sleeping_thread *sleeping_thread;
-	enum intr_level old_level;
+		struct thread *curr_thread;
+		struct sleeping_thread *sleeping_thread;
+		enum intr_level old_level;
 
-	/* Allocate memory. */
-	sleeping_thread = malloc(sizeof *sleeping_thread);
-	if (sleeping_thread == NULL)
-		return NULL;
+		/* Allocate memory. */
+		sleeping_thread = malloc(sizeof *sleeping_thread);
+		if (sleeping_thread == NULL)
+			return NULL;
 
-	curr_thread = thread_current();
-	sleeping_thread->thread = curr_thread;
-	sleeping_thread->ticks = ticks;
+		curr_thread = thread_current();
+		sleeping_thread->thread = curr_thread;
+		sleeping_thread->ticks = ticks;
 
-	list_push_front(&sleeping_threads_list, &sleeping_thread->elem);
+		list_push_front(&sleeping_threads_list, &sleeping_thread->elem);
 
-	old_level = intr_disable();
-	thread_block();
-	// printf("block done.\n");
-	intr_set_level(old_level);
+		old_level = intr_disable();
+		thread_block();
+		// printf("block done.\n");
+		intr_set_level(old_level);
+	}
 
 	// while (timer_elapsed (start) < ticks)
 	// thread_yield ();
