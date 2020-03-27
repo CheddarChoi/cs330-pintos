@@ -174,7 +174,8 @@ timer_interrupt(struct intr_frame *args UNUSED)
 		if (temp->ticks <= 0)
 		{
 			thread_unblock(temp->sleeping_thread);
-			intr_set_level(INTR_ON);
+
+			intr_set_level(intr_enable());
 		}
 	}
 
