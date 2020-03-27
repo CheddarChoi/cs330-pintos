@@ -104,12 +104,9 @@ timer_elapsed(int64_t then)
 /* Suspends execution for approximately TICKS timer ticks. */
 void timer_sleep(int64_t ticks)
 {
-	printf("%" PRId64 "\n", ticks);
-
-	// printf("time to sleep~\n");
 	int64_t start = timer_ticks();
 
-	// ASSERT(intr_get_level() == INTR_ON);
+	ASSERT(intr_get_level() == INTR_ON);
 
 	struct thread *curr_thread;
 	struct sleeping_thread *sleeping_thread;
@@ -128,7 +125,6 @@ void timer_sleep(int64_t ticks)
 
 	old_level = intr_disable();
 	thread_block();
-	// printf("block done.\n");
 	intr_set_level(old_level);
 
 	// while (timer_elapsed (start) < ticks)
@@ -165,9 +161,6 @@ timer_interrupt(struct intr_frame *args UNUSED)
 {
 	struct list_elem *e;
 	struct sleeping_thread *sleeping_thread;
-	bool is_waken;
-
-	is_waken = false;
 
 	for (e = list_begin(&sleeping_threads_list); e != list_end(&sleeping_threads_list);
 			 e = list_next(e))
@@ -176,10 +169,8 @@ timer_interrupt(struct intr_frame *args UNUSED)
 		sleeping_thread->ticks = sleeping_thread->ticks - 1;
 		if (sleeping_thread->ticks <= 0)
 		{
-			// printf("time to wake up~\n");
 			thread_unblock(sleeping_thread->thread);
 			list_remove(e);
-			is_waken = true;
 		}
 	}
 
