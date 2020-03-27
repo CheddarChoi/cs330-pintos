@@ -32,7 +32,7 @@ static void real_time_sleep(int64_t num, int32_t denom);
 struct sleeping_thread
 {
 	struct list_elem elem;
-	struct thread *sleeping_thread;
+	struct thread *thread;
 	int64_t ticks;
 };
 
@@ -110,19 +110,19 @@ void timer_sleep(int64_t ticks)
 	// ASSERT(intr_get_level() == INTR_ON);
 
 	struct thread *curr_thread;
-	struct sleeping_thread *curr_sleeping_thread;
+	struct sleeping_thread *sleeping_thread;
 	enum intr_level old_level;
 
 	/* Allocate memory. */
-	curr_sleeping_thread = malloc(sizeof *curr_sleeping_thread);
-	if (curr_sleeping_thread == NULL)
+	sleeping_thread = malloc(sizeof *sleeping_thread);
+	if (sleeping_thread == NULL)
 		return NULL;
 
 	curr_thread = thread_current();
-	curr_sleeping_thread->sleeping_thread = curr_thread;
-	curr_sleeping_thread->ticks = ticks;
+	sleeping_thread->thread = curr_thread;
+	sleeping_thread->ticks = ticks;
 
-	list_push_front(&sleeping_threads_list, &curr_sleeping_thread->elem);
+	list_push_front(&sleeping_threads_list, &sleeping_thread->elem);
 
 	old_level = intr_disable();
 	thread_block();
@@ -172,7 +172,7 @@ timer_interrupt(struct intr_frame *args UNUSED)
 		printf("hey");
 		if (temp->ticks <= 0)
 		{
-			thread_unblock(temp->sleeping_thread);
+			thread_unblock(temp->thread);
 		}
 	}
 
