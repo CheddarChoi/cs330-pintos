@@ -111,7 +111,6 @@ void timer_sleep(int64_t ticks)
 
 	struct thread *curr_thread;
 	struct sleeping_thread *curr_sleeping_thread;
-	enum intr_level old_level;
 
 	/* Allocate memory. */
 	curr_sleeping_thread = malloc(sizeof *curr_sleeping_thread);
@@ -120,9 +119,7 @@ void timer_sleep(int64_t ticks)
 
 	curr_thread = thread_current();
 
-	old_level = intr_disable();
-
-	intr_set_level(old_level);
+	intr_set_level(intr_disable());
 
 	thread_block();
 
