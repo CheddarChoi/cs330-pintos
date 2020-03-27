@@ -120,9 +120,8 @@ void timer_sleep(int64_t ticks)
 
 	curr_thread = thread_current();
 	old_level = intr_disable();
-	thread_block();
-
 	printf("done\n");
+	thread_block();
 
 	intr_set_level(old_level);
 
