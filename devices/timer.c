@@ -104,7 +104,7 @@ timer_elapsed(int64_t then)
 /* Suspends execution for approximately TICKS timer ticks. */
 void timer_sleep(int64_t ticks)
 {
-	printf("time to sleep~\n");
+	// printf("time to sleep~\n");
 	int64_t start = timer_ticks();
 
 	// ASSERT(intr_get_level() == INTR_ON);
@@ -126,7 +126,7 @@ void timer_sleep(int64_t ticks)
 
 	old_level = intr_disable();
 	thread_block();
-	printf("block done.\n");
+	// printf("block done.\n");
 	intr_set_level(old_level);
 
 	// while (timer_elapsed (start) < ticks)
@@ -174,7 +174,7 @@ timer_interrupt(struct intr_frame *args UNUSED)
 		sleeping_thread->ticks = sleeping_thread->ticks - 1;
 		if (is_waken == false && sleeping_thread->ticks <= 0)
 		{
-			printf("time to wake up~\n");
+			// printf("time to wake up~\n");
 			thread_unblock(sleeping_thread->thread);
 			list_remove(e);
 			is_waken = true;
