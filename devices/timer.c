@@ -104,7 +104,7 @@ timer_elapsed(int64_t then)
 /* Suspends execution for approximately TICKS timer ticks. */
 void timer_sleep(int64_t ticks)
 {
-	printf("start to sleep\n");
+	printf("time to sleep~\n");
 	int64_t start = timer_ticks();
 
 	// ASSERT(intr_get_level() == INTR_ON);
