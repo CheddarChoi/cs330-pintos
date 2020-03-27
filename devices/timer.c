@@ -169,9 +169,9 @@ timer_interrupt(struct intr_frame *args UNUSED)
 	{
 		temp = list_entry(e, struct sleeping_thread, elem);
 		temp->ticks = temp->ticks - 1;
-		printf("hey");
 		if (temp->ticks <= 0)
 		{
+			printf("time to wake up~\n");
 			thread_unblock(temp->thread);
 		}
 	}
