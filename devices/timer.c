@@ -163,16 +163,20 @@ timer_interrupt(struct intr_frame *args UNUSED)
 {
 	struct list_elem *e;
 	struct sleeping_thread *temp;
+	bool is_waken;
+
+	is_waken = false;
 
 	for (e = list_begin(&sleeping_threads_list); e != list_end(&sleeping_threads_list);
 			 e = list_next(e))
 	{
 		temp = list_entry(e, struct sleeping_thread, elem);
 		temp->ticks = temp->ticks - 1;
-		if (temp->ticks <= 0)
+		if (is_waken==false && temp->ticks <= 0)
 		{
 			printf("time to wake up~\n");
 			thread_unblock(temp->thread);
+			is_waken = true;
 		}
 	}
 
