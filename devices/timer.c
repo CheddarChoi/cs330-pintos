@@ -174,7 +174,7 @@ timer_interrupt(struct intr_frame *args UNUSED)
 	{
 		sleeping_thread = list_entry(e, struct sleeping_thread, elem);
 		sleeping_thread->ticks = sleeping_thread->ticks - 1;
-		if (is_waken == false && sleeping_thread->ticks <= 0)
+		if (sleeping_thread->ticks <= 0)
 		{
 			// printf("time to wake up~\n");
 			thread_unblock(sleeping_thread->thread);
