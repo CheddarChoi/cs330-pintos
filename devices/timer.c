@@ -104,7 +104,7 @@ timer_elapsed(int64_t then)
 /* Suspends execution for approximately TICKS timer ticks. */
 void timer_sleep(int64_t ticks)
 {
-	printf("start to sleep");
+	printf("start to sleep\n");
 	int64_t start = timer_ticks();
 
 	// ASSERT(intr_get_level() == INTR_ON);
@@ -119,14 +119,12 @@ void timer_sleep(int64_t ticks)
 		return NULL;
 
 	curr_thread = thread_current();
-
 	old_level = intr_disable();
-
 	thread_block();
 
-	intr_set_level(old_level);
+	printf("done\n");
 
-	printf("done");
+	intr_set_level(old_level);
 
 	curr_sleeping_thread->sleeping_thread = curr_thread;
 	curr_sleeping_thread->ticks = ticks;
