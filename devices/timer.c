@@ -111,6 +111,7 @@ void timer_sleep(int64_t ticks)
 
 	struct thread *curr_thread;
 	struct sleeping_thread *curr_sleeping_thread;
+	enum intr_level old_level;
 
 	/* Allocate memory. */
 	curr_sleeping_thread = malloc(sizeof *curr_sleeping_thread);
@@ -119,9 +120,11 @@ void timer_sleep(int64_t ticks)
 
 	curr_thread = thread_current();
 
-	intr_disable();
+	old_level = intr_disable();
 
 	thread_block();
+
+	intr_set_level(old_level);
 
 	printf("done");
 
@@ -174,8 +177,6 @@ timer_interrupt(struct intr_frame *args UNUSED)
 		if (temp->ticks <= 0)
 		{
 			thread_unblock(temp->sleeping_thread);
-
-			intr_enable();
 		}
 	}
 
