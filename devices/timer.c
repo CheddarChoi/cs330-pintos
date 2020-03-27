@@ -162,7 +162,7 @@ static void
 timer_interrupt(struct intr_frame *args UNUSED)
 {
 	struct list_elem *e;
-	struct sleeping_thread *temp;
+	struct sleeping_thread *sleeping_thread;
 	bool is_waken;
 
 	is_waken = false;
@@ -170,12 +170,12 @@ timer_interrupt(struct intr_frame *args UNUSED)
 	for (e = list_begin(&sleeping_threads_list); e != list_end(&sleeping_threads_list);
 			 e = list_next(e))
 	{
-		temp = list_entry(e, struct sleeping_thread, elem);
-		temp->ticks = temp->ticks - 1;
-		if (is_waken==false && temp->ticks <= 0)
+		sleeping_thread = list_entry(e, struct sleeping_thread, elem);
+		sleeping_thread->ticks = sleeping_thread->ticks - 1;
+		if (is_waken == false && sleeping_thread->ticks <= 0)
 		{
 			printf("time to wake up~\n");
-			thread_unblock(temp->thread);
+			thread_unblock(sleeping_thread->thread);
 			is_waken = true;
 		}
 	}
