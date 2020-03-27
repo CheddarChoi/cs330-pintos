@@ -107,10 +107,11 @@ void timer_sleep(int64_t ticks)
 	printf("start to sleep");
 	int64_t start = timer_ticks();
 
-	ASSERT(intr_get_level() == INTR_ON);
+	// ASSERT(intr_get_level() == INTR_ON);
 
 	struct thread *curr_thread;
 	struct sleeping_thread *curr_sleeping_thread;
+	enum intr_level old_level;
 
 	/* Allocate memory. */
 	curr_sleeping_thread = malloc(sizeof *curr_sleeping_thread);
@@ -119,7 +120,9 @@ void timer_sleep(int64_t ticks)
 
 	curr_thread = thread_current();
 
-	intr_set_level(INTR_OFF);
+	old_level = intr_disable();
+
+	intr_set_level(old_level);
 
 	thread_block();
 
