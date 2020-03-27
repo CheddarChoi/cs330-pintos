@@ -176,6 +176,7 @@ timer_interrupt(struct intr_frame *args UNUSED)
 		{
 			printf("time to wake up~\n");
 			thread_unblock(temp->thread);
+			list_remove(e);
 			is_waken = true;
 		}
 	}
